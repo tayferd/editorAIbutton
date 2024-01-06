@@ -1,0 +1,32 @@
+import tkinter as tk
+import pyperclip
+import openai
+
+
+prompt = "please take this text and improve it as if...."
+def get_clipboard_content():
+    return pyperclip.paste()
+
+def set_clipboard_content(text):
+    pyperclip.copy(text)
+
+def query_gpt(prompt):
+    openai.api_key = 'your api key'
+    response = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=800)
+    return response.choices[0].text.strip()
+
+def handle_button_click():
+    clipboard_content = get_clipboard_content()
+    gpt_response = query_gpt(clipboard_content)
+    set_clipboard_content(gpt_response)
+
+# Setup Tkinter window
+root = tk.Tk()
+root.title("GPT Clipboard Interactor")
+
+# Add button
+button = tk.Button(root, text="Send Clipboard to GPT", command=handle_button_click)
+button.pack(pady=20)
+
+# Run the application
+root.mainloop()
